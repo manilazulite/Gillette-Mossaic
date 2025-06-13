@@ -60,6 +60,7 @@ public class GameManager : MonoBehaviour
 
     public List<Texture2D> CollageWall_1 = new List<Texture2D>();
     public List<RawImage> CollageWall_1_ImageList = new List<RawImage>();
+    public List<RawImage> CollageWall_2_ImageList = new List<RawImage>();
 
     public string AssetPath;
 
@@ -74,7 +75,7 @@ public class GameManager : MonoBehaviour
         RetakeButton.GetComponent<Button>().onClick.AddListener(InitiateRetakPicture);
         ProceedButton.GetComponent<Button>().onClick.AddListener(()=>ScreenContoller(3));
         //DisplayAndPrintButton.GetComponent<Button>().onClick.AddListener(()=>ScreenContoller(4));
-        DisplayAndPrintButton.GetComponent<Button>().onClick.AddListener(InitiateDisplayOrPrint);
+        DisplayAndPrintButton.GetComponent<Button>().onClick.AddListener(uploadImageToServerAsync);
         PrintButton.GetComponent<Button>().onClick.AddListener(()=>ScreenContoller(4));
 
         HomeButton.GetComponent<Button>().onClick.AddListener(Home);
@@ -82,10 +83,12 @@ public class GameManager : MonoBehaviour
         
         AssetPath = Application.streamingAssetsPath + "/CapturedImages";
 
-        TriggerQrCodeGeneration += InitQrCodeGeneration;
+        //TriggerQrCodeGeneration += InitQrCodeGeneration;
 
         LoadTheImagesFromStreamingAssets();
     }
+
+
 
     private void StartTimer()
     {
@@ -192,7 +195,19 @@ public class GameManager : MonoBehaviour
 
     private void InitiateDisplayOrPrint()
     {
-        StartCoroutine(DisplayAndPrint_Wall_1());
+        //StartCoroutine(DisplayAndPrint_Wall_1());
+        DisplayTheImagesInTheWall();
+    }
+
+    private void DisplayTheImagesInTheWall()
+    {
+        int tempval = 0;
+
+        for (int i = CollageWall_1.Count; i > 0; i--)
+        {
+            CollageWall_1_ImageList[tempval].GetComponent<RawImage>().texture = CollageWall_1[i - 1];
+            tempval++;
+        }
     }
 
     private IEnumerator DisplayAndPrint_Wall_1()
@@ -219,7 +234,24 @@ public class GameManager : MonoBehaviour
                 tempvounterlessthanten++;
             }
         }
-        
+
+        if (CollageWall_1.Count < CollageWall_2_ImageList.Count)
+        {
+            for (int i = 0; i < CollageWall_1.Count; i++)
+            {
+                CollageWall_2_ImageList[i].texture = CollageWall_1[i];
+            }
+        }
+        else
+        {
+
+            //Displaying the second wall Images
+            for (int i = 0; i < CollageWall_2_ImageList.Count; i++)
+            {
+                CollageWall_2_ImageList[i].texture = CollageWall_1[i];
+            }
+        }
+
         ScreenContoller(4);
     }
 
@@ -236,8 +268,8 @@ public class GameManager : MonoBehaviour
                 Panel_2.SetActive(false);
                 Panel_1.SetActive(true);
 
-                HomeButton.SetActive(false);
-                BackButton.SetActive(false);
+                //HomeButton.SetActive(false);
+                //BackButton.SetActive(false);
                 break;
 
             case ScreenState.showCaptured:
@@ -423,42 +455,63 @@ public class GameManager : MonoBehaviour
     private string _capturedImagePath = "";
 
     //private async void uploadImageToServerAsync(string _capturedImagePath)
+    //private async void uploadImageToServerAsync()
+    //private async void uploadImageToServerAsync()
+    //{
+    //    UnityEngine.Debug.Log("uploadImageToServerAsync is called");
+
+    //    _capturedImagePath = lastSnappedPicturePath;
+    //    UnityEngine.Debug.Log("_capturedImagePath : " + _capturedImagePath);
+
+    //    try
+    //    {
+    //        var client = new HttpClient();
+    //         var request = new HttpRequestMessage(HttpMethod.Post, "https://lazulite.online/routes/Sweet_Water/upload-image");
+    //        //var request = new HttpRequestMessage(HttpMethod.Post, "http://157.175.150.146:3000/routes/Sweet_Water/upload-image");
+    //        var content = new MultipartFormDataContent();
+    //        content.Add(new StreamContent(File.OpenRead(_capturedImagePath)), "image", _capturedImagePath);
+    //        request.Content = content;
+    //        var response = await client.SendAsync(request).ConfigureAwait(false);
+    //        response.EnsureSuccessStatusCode();
+
+    //        UnityEngine.Debug.Log(response.StatusCode);
+
+    //        var contents = response.Content.ReadAsStringAsync();
+    //        qrCodeFileName = contents.Result;
+
+    //        await UnityMainThreadDispatcher.Instance().EnqueueAsync(TriggerQrCodeGeneration);
+    //    }
+    //    catch (System.Exception ex)
+    //    {
+    //        UnityEngine.Debug.Log($"Server Error : " + ex.Message);
+    //    }
+
+    //    //TriggerQrCodeGeneration.Invoke();
+    //    StartCoroutine(generateQRCodeOnQRBtn());
+    //}
+    //private async void uploadImageToServerAsync(string _capturedImagePath)
     private async void uploadImageToServerAsync()
     {
-        UnityEngine.Debug.Log("uploadImageToServerAsync is called");
+        var client = new HttpClient();
+        var request = new HttpRequestMessage(HttpMethod.Post, "https://lazulite.online/routes/Sweet_Water/upload-image");
+        var content = new MultipartFormDataContent();
+        content.Add(new StreamContent(File.OpenRead(lastSnappedPicturePath)), "image", lastSnappedPicturePath);
+        request.Content = content;
+        var response = await client.SendAsync(request).ConfigureAwait(false);
+        response.EnsureSuccessStatusCode();
+        var contents = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+        qrCodeFileName = contents;
+        //Debug.Log("QR Code FileName = " + qrCodeFileName);
 
-        _capturedImagePath = lastSnappedPicturePath;
-        UnityEngine.Debug.Log("_capturedImagePath : " + _capturedImagePath);
-
-        try
-        {
-            var client = new HttpClient();
-             var request = new HttpRequestMessage(HttpMethod.Post, "https://lazulite.online/routes/Sweet_Water/upload-image");
-            //var request = new HttpRequestMessage(HttpMethod.Post, "http://157.175.150.146:3000/routes/Sweet_Water/upload-image");
-            var content = new MultipartFormDataContent();
-            content.Add(new StreamContent(File.OpenRead(_capturedImagePath)), "image", _capturedImagePath);
-            request.Content = content;
-            var response = await client.SendAsync(request).ConfigureAwait(false);
-            response.EnsureSuccessStatusCode();
-
-            UnityEngine.Debug.Log(response.StatusCode);
-
-            var contents = response.Content.ReadAsStringAsync();
-            qrCodeFileName = contents.Result;
-        }
-        catch (System.Exception ex)
-        {
-            UnityEngine.Debug.Log($"Server Error : " + ex.Message);
-        }
-
-        TriggerQrCodeGeneration.Invoke();
-        //StartCoroutine(generateQRCodeOnQRBtn());
+        UnityMainThreadDispatcher.Instance().Enqueue(() => {
+            StartCoroutine(generateQRCodeOnQRBtn());
+        });
     }
 
-    private void InitQrCodeGeneration()
-    {
-        StartCoroutine(generateQRCodeOnQRBtn());
-    }
+    //private void InitQrCodeGeneration()
+    //{
+    //    StartCoroutine(generateQRCodeOnQRBtn());
+    //}
 
     //public void generateQRCodeOnQRBtn()
     public IEnumerator generateQRCodeOnQRBtn()
@@ -492,12 +545,13 @@ public class GameManager : MonoBehaviour
         var encoder = Barcode.GetEncoder(BarcodeType.QrCode, new QrCodeEncodeOptions
         {
             Margin = 5,
-            Width = 1000,
-            Height = 1000,
+            Width = 400,
+            Height = 400,
             ECLevel = QrCodeErrorCorrectionLevel.M
         });
 
         var result = encoder.Encode(_qrCodeURL);
+
         if (result.Success)
         {
             var qrCodeTexture = result.GetTexture();
@@ -516,7 +570,9 @@ public class GameManager : MonoBehaviour
         else
         {
             UnityEngine.Debug.LogError("Encoding failed: " + result.ErrorMessage);
-        }        
+        }
+
+        ScreenContoller(4);
     }
 
     #endregion
@@ -524,5 +580,7 @@ public class GameManager : MonoBehaviour
     private void ResetGame()
     {
         countDown = 3;
+        HomeButton.SetActive(false);
+        BackButton.SetActive(false);
     }
 }
