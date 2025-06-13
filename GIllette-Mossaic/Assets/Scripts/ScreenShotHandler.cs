@@ -131,10 +131,11 @@ public class ScreenShotHandler : MonoBehaviour
         LoadTheLastSavedImage();
     }
 
+    //string lastSnappedPicturePath = string.Empty;
     private void LoadTheLastSavedImage()
     {
-        string path = Path.Combine(gameManager.AssetPath, gameManager.LastSavedImageName);
-        byte[] fileData = File.ReadAllBytes(path);
+        gameManager.lastSnappedPicturePath = Path.Combine(gameManager.AssetPath, gameManager.LastSavedImageName);
+        byte[] fileData = File.ReadAllBytes(gameManager.lastSnappedPicturePath);
         Texture2D tex = new Texture2D(2, 2); // Temp size
         tex.LoadImage(fileData);
 
