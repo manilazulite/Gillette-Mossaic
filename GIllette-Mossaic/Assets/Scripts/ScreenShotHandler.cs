@@ -48,16 +48,12 @@ public class ScreenShotHandler : MonoBehaviour
     {
         WebCamDevice[] devices = WebCamTexture.devices;
         Debug.Log(devices[0].name);
-
-        for (var i = 0; i < devices.Length; i++)
+        if (devices.Length > 0)
         {
-            if (devices[i].name == cameraName)
-            {
-                webcamTexture = new WebCamTexture(cameraName, 3840, 2160, 60);
+            webcamTexture = new WebCamTexture(devices[0].name, 3840, 2160, 60);
 
-                webcamTexture.Play();
-                camFeed.texture = webcamTexture;
-            }
+            webcamTexture.Play();
+            camFeed.texture = webcamTexture;
         }
     }
 
