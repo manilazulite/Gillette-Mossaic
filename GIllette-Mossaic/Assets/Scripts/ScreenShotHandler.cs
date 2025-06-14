@@ -112,13 +112,9 @@ public class ScreenShotHandler : MonoBehaviour
     {
         string imagename = "Gillette_" + DateTime.Now.ToString("yyyy-MMM-dd-HH-mm-ss") + ".png";
 
-                
-        // Optionally save it to a file
         byte[] bytes = texture.EncodeToPNG();
 
-        //string path = Path.Combine(Application.dataPath, imagename);
         gameManager.LastSavedImageName = imagename;
-        //File.WriteAllBytes(path, bytes);
 
         FileIOUtility
                 .SaveImage(texture, gameManager.AssetPath,
@@ -130,8 +126,7 @@ public class ScreenShotHandler : MonoBehaviour
 
         LoadTheLastSavedImage();
     }
-
-    //string lastSnappedPicturePath = string.Empty;
+    
     private void LoadTheLastSavedImage()
     {
         gameManager.lastSnappedPicturePath = Path.Combine(gameManager.AssetPath, gameManager.LastSavedImageName);
