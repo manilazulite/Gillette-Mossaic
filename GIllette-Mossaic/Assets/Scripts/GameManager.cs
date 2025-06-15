@@ -83,6 +83,8 @@ public class GameManager : MonoBehaviour
         AssetPath = Application.streamingAssetsPath + "/CapturedImages";
 
         LoadTheImagesFromStreamingAssets();
+
+        DisplayTheImagesInTheWall();
     }
 
 
@@ -96,6 +98,9 @@ public class GameManager : MonoBehaviour
     {
         OverlayImage.SetActive(true);
         CountDownText.text = countDown.ToString();
+
+        HomeButton.GetComponent<Button>().interactable = false;
+        BackButton.GetComponent<Button>().interactable = false;
 
         if (countDown > 0)
         {
@@ -136,6 +141,9 @@ public class GameManager : MonoBehaviour
                 ProceedButton.SetActive(true);
                 CaptureButton.SetActive(false);
 
+                HomeButton.GetComponent<Button>().interactable = true;
+                HomeButton.GetComponent<Button>().interactable = true;
+
                 BackButton.SetActive(false);
                 break;
             case 3://Display or Print
@@ -153,7 +161,8 @@ public class GameManager : MonoBehaviour
                 break;
             case 4://Thank you
                 state = ScreenState.thankYou;
-                
+                HomeButton.GetComponent<Button>().interactable = true;
+
                 //uploadImageToServerAsync();
                 ScreenShotImage.gameObject.SetActive(false);
                 Panel_3.SetActive(false);
@@ -190,11 +199,7 @@ public class GameManager : MonoBehaviour
         StartTimer();
         UnityEngine.Debug.Log("retake done");
     }
-
-    //private void InitiateDisplayOrPrint()
-    //{
-    //    DisplayTheImagesInTheWall();
-    //}
+    
 
     private void DisplayTheImagesInTheWall()
     {
@@ -452,6 +457,11 @@ public class GameManager : MonoBehaviour
     
     private async void uploadImageToServerAsync()
     {
+        DisplayAndPrintButton.GetComponent<Button>().interactable = false;
+        PrintButton.GetComponent<Button>().interactable = false;
+        HomeButton.GetComponent<Button>().interactable = false;
+
+
         DisplayTheImagesInTheWall();
 
         var client = new HttpClient();
@@ -533,5 +543,10 @@ public class GameManager : MonoBehaviour
         countDown = 3;
         HomeButton.SetActive(false);
         BackButton.SetActive(false);
+
+        DisplayAndPrintButton.GetComponent<Button>().interactable = true;
+        PrintButton.GetComponent<Button>().interactable = true;
+        HomeButton.GetComponent<Button>().interactable = true;
+        BackButton.GetComponent<Button>().interactable = true;
     }
 }
