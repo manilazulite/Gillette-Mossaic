@@ -25,6 +25,7 @@ public class GameManager : MonoBehaviour
     ScreenState state = ScreenState.home;
 
     [SerializeField] private ScreenShotHandler scrnShotHandler;
+    [SerializeField] private PrintScreenHandler printScreenHandler;
 
     [Header("Gameobjects")]
     [Space(5)]
@@ -45,10 +46,13 @@ public class GameManager : MonoBehaviour
     public GameObject HomeButton;
     public GameObject BackButton;
     public GameObject MainMenu;
+    public GameObject FrameBar;
+    public GameObject Frame;
 
     [SerializeField] private TMP_InputField printerNameField;
 
     public RawImage ScreenShotImage;
+    public RectTransform CamFeedParent;
 
     [Space(5)]
     public TextMeshProUGUI CountDownText, HeaderText;
@@ -56,6 +60,7 @@ public class GameManager : MonoBehaviour
     private int countDown = 3;
 
     public string LastSavedImageName = string.Empty;
+    public string LastSavedPrintImageName = string.Empty;
     public string lastSnappedPicturePath = string.Empty;
 
     public List<Texture2D> CollageWall_1 = new List<Texture2D>();
@@ -63,6 +68,7 @@ public class GameManager : MonoBehaviour
     public List<RawImage> CollageWall_2_ImageList = new List<RawImage>();
 
     public string AssetPath;
+    public string PrintAssetPath;
 
     public event Action TriggerQrCodeGeneration;
 
@@ -75,22 +81,42 @@ public class GameManager : MonoBehaviour
         RetakeButton.GetComponent<Button>().onClick.AddListener(InitiateRetakPicture);
         ProceedButton.GetComponent<Button>().onClick.AddListener(()=>ScreenContoller(3));
         DisplayAndPrintButton.GetComponent<Button>().onClick.AddListener(uploadImageToServerAsync);
-        PrintButton.GetComponent<Button>().onClick.AddListener(()=>ScreenContoller(4));
+        //DisplayAndPrintButton.GetComponent<Button>().onClick.AddListener(()=>ScreenContoller(4));
+        //PrintButton.GetComponent<Button>().onClick.AddListener(()=>ScreenContoller(4));
+        PrintButton.GetComponent<Button>().onClick.AddListener(()=>ScreenContoller(5));
 
         HomeButton.GetComponent<Button>().onClick.AddListener(Home);
         BackButton.GetComponent<Button>().onClick.AddListener(Home);   
         
         AssetPath = Application.streamingAssetsPath + "/CapturedImages";
+        PrintAssetPath = Application.streamingAssetsPath + "/printimages";
 
         LoadTheImagesFromStreamingAssets();
 
         DisplayTheImagesInTheWall();
-    }
 
+        //for (int i = 1; i < Display.displays.Length; i++)
+        //{
+        //    // Option A – let Unity use the monitor's native resolution
+        //    Display.displays[i].Activate();
+
+        //    // Option B – pick a resolution/refresh if you need to
+        //    // Display.displays[i].Activate(1920, 1080, 60);
+        //}
+
+        Display[] displays = Display.displays;
+        foreach (Display display in displays)
+        {
+            display.Activate();
+        }
+
+    }
 
 
     private void StartTimer()
     {
+        //StartCoroutine(PrintScreenHandler.instance.ApplyTheCapturedPixelsToCustomResolution());
+        
         StartCoroutine(StartCountDown());
     }
 
@@ -118,12 +144,15 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    //1545/2000
+
     public void ScreenContoller(int index)
     {
         switch(index)
         {
             case 1://Capture screen
                 state = ScreenState.capture;
+                scrnShotHandler.CameraFeedParent.SetActive(true);
                 scrnShotHandler.camFeed.gameObject.SetActive(true);
                 Panel_1.SetActive(false);
                 Panel_2.SetActive(true);
@@ -132,6 +161,9 @@ public class GameManager : MonoBehaviour
 
                 HomeButton.SetActive(true);
                 BackButton.SetActive(true);
+
+                Frame.SetActive(true);
+                FrameBar.SetActive(true);
                 
                 scrnShotHandler.StartCamera();
                 break;
@@ -161,17 +193,43 @@ public class GameManager : MonoBehaviour
                 break;
             case 4://Thank you
                 state = ScreenState.thankYou;
-                HomeButton.GetComponent<Button>().interactable = true;
+                HomeButton.GetComponent<Button>().interactable = false;
 
+                //printScreenHandler.InitPrint();
+                //DisplayTheImagesInTheWall();
                 //uploadImageToServerAsync();
-                ScreenShotImage.gameObject.SetActive(false);
-                Panel_3.SetActive(false);
-                Panel_4.SetActive(true);
+
+                //PrintImageCommand(LastSavedImageName);
+                StartCoroutine(ThankYou());
+
+                break;
+            case 5://Thank you
+                state = ScreenState.thankYou;
+                HomeButton.GetComponent<Button>().interactable = false;
+
+                printScreenHandler.InitPrint();
+                //DisplayTheImagesInTheWall();
+                uploadImageToServerAsync();
+
+                //PrintImageCommand(LastSavedImageName);
+
                 break;
             default:
 
                 break;
         }
+    }
+
+    private IEnumerator ThankYou()
+    {
+        UnityEngine.Debug.Log("calling thank u");
+        yield return new WaitForSeconds(3f);
+        ScreenShotImage.gameObject.SetActive(false);
+        Panel_3.SetActive(false);
+        Frame.SetActive(false);
+        FrameBar.SetActive(false);
+        Panel_4.SetActive(true);
+        HomeButton.GetComponent<Button>().interactable = true;
     }
 
     public void InitiateRetakPicture()
@@ -186,6 +244,7 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(0.25f);
         //yield return new WaitForEndOfFrame();
         //scrnShotHandler.webcamTexture.Play();
+        scrnShotHandler.CameraFeedParent.SetActive(true);
         scrnShotHandler.camFeed.gameObject.SetActive(true);
         //ScreenShotImage.sprite = null;
         ScreenShotImage.gameObject.SetActive(false);
@@ -198,8 +257,7 @@ public class GameManager : MonoBehaviour
 
         StartTimer();
         UnityEngine.Debug.Log("retake done");
-    }
-    
+    }    
 
     private void DisplayTheImagesInTheWall()
     {
@@ -212,50 +270,50 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private IEnumerator DisplayAndPrint_Wall_1()
-    {
-        yield return new WaitForSeconds(0.5f);
+    //private IEnumerator DisplayAndPrint_Wall_1()
+    //{
+    //    yield return new WaitForSeconds(0.5f);
 
-        int tempval = 0;
-        int tempvounterlessthanten = 0;
+    //    int tempval = 0;
+    //    int tempvounterlessthanten = 0;
 
-        if (CollageWall_1.Count > 10)
-        {
-            for (int i = CollageWall_1.Count; i > CollageWall_1.Count - 10; i--)
-            {
-                CollageWall_1_ImageList[tempval].GetComponent<RawImage>().texture = CollageWall_1[i - 1];
-                tempval++;
-            }
-        }
+    //    if (CollageWall_1.Count > 10)
+    //    {
+    //        for (int i = CollageWall_1.Count; i > CollageWall_1.Count - 10; i--)
+    //        {
+    //            CollageWall_1_ImageList[tempval].GetComponent<RawImage>().texture = CollageWall_1[i - 1];
+    //            tempval++;
+    //        }
+    //    }
 
-        if(CollageWall_1.Count < 10)
-        {
-            for(int i = CollageWall_1.Count; i > 0; i--)
-            {
-                CollageWall_1_ImageList[tempvounterlessthanten].GetComponent<RawImage>().texture = CollageWall_1[i - 1];
-                tempvounterlessthanten++;
-            }
-        }
+    //    if(CollageWall_1.Count < 10)
+    //    {
+    //        for(int i = CollageWall_1.Count; i > 0; i--)
+    //        {
+    //            CollageWall_1_ImageList[tempvounterlessthanten].GetComponent<RawImage>().texture = CollageWall_1[i - 1];
+    //            tempvounterlessthanten++;
+    //        }
+    //    }
 
-        if (CollageWall_1.Count < CollageWall_2_ImageList.Count)
-        {
-            for (int i = 0; i < CollageWall_1.Count; i++)
-            {
-                CollageWall_2_ImageList[i].texture = CollageWall_1[i];
-            }
-        }
-        else
-        {
+    //    if (CollageWall_1.Count < CollageWall_2_ImageList.Count)
+    //    {
+    //        for (int i = 0; i < CollageWall_1.Count; i++)
+    //        {
+    //            CollageWall_2_ImageList[i].texture = CollageWall_1[i];
+    //        }
+    //    }
+    //    else
+    //    {
 
-            //Displaying the second wall Images
-            for (int i = 0; i < CollageWall_2_ImageList.Count; i++)
-            {
-                CollageWall_2_ImageList[i].texture = CollageWall_1[i];
-            }
-        }
+    //        //Displaying the second wall Images
+    //        for (int i = 0; i < CollageWall_2_ImageList.Count; i++)
+    //        {
+    //            CollageWall_2_ImageList[i].texture = CollageWall_1[i];
+    //        }
+    //    }
 
-        ScreenContoller(4);
-    }
+    //    ScreenContoller(4);
+    //}
 
     public void Home()
     {
@@ -390,7 +448,7 @@ public class GameManager : MonoBehaviour
             "\"" +
             Application.streamingAssetsPath.Replace(@"/", @"\")
             +
-            "\\CapturedImages\\" +
+            "\\printimages\\" +
             fileName +
             "\"" +
             " " +
@@ -398,6 +456,8 @@ public class GameManager : MonoBehaviour
             printerName +
             "\"";
         ExecuteCommand(fullCommand);
+        StartCoroutine(generateQRCodeOnQRBtn());
+        
     }
 
     public static void ExecuteCommand(string _cmd)
@@ -413,13 +473,19 @@ public class GameManager : MonoBehaviour
             myProcess.StartInfo.Arguments = "/c " + _cmd;
             myProcess.EnableRaisingEvents = true;
             myProcess.Start();
-            myProcess.WaitForExit();
+            myProcess.WaitForExit();           
+            
         }
         catch (Exception e)
         {
             UnityEngine.Debug.Log(e.Message);
         }
+
+        
+
         //add your logic if you want something to happen after print
+
+
     }
 
     #endregion
@@ -461,9 +527,6 @@ public class GameManager : MonoBehaviour
         PrintButton.GetComponent<Button>().interactable = false;
         HomeButton.GetComponent<Button>().interactable = false;
 
-
-        DisplayTheImagesInTheWall();
-
         var client = new HttpClient();
         var request = new HttpRequestMessage(HttpMethod.Post, "https://lazulite.online/routes/Sweet_Water/upload-image");
         var content = new MultipartFormDataContent();
@@ -475,13 +538,14 @@ public class GameManager : MonoBehaviour
         qrCodeFileName = contents;
 
         UnityMainThreadDispatcher.Instance().Enqueue(() => {
-            StartCoroutine(generateQRCodeOnQRBtn());
+            //PrintScreenHandler.instance.InitPrint();
+            StartCoroutine(generateQRCodeOnQRBtn());            
         });
     }
    
     public IEnumerator generateQRCodeOnQRBtn()
     {
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(2f);
         triggerQRCodeGenerator();
     }
 
@@ -507,8 +571,8 @@ public class GameManager : MonoBehaviour
         var encoder = Barcode.GetEncoder(BarcodeType.QrCode, new QrCodeEncodeOptions
         {
             Margin = 5,
-            Width = 400,
-            Height = 400,
+            Width = 1600,
+            Height = 1600,
             ECLevel = QrCodeErrorCorrectionLevel.M
         });
 

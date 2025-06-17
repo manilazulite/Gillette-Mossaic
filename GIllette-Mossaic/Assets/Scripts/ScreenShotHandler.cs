@@ -1,7 +1,7 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 using System.IO;
-using UnityEditor.Overlays;
+//using UnityEditor.Overlays;
 using UnityEngine.UI;
 using System;
 
@@ -18,12 +18,19 @@ public class ScreenShotHandler : MonoBehaviour
     private Rect captureArea;
 
     public RawImage camFeed;
+    public RawImage NewCamFeed;
+
+    public GameObject CameraFeedParent;
+
     public RenderTexture camRenderTexture;
     [HideInInspector]
     public WebCamTexture webcamTexture;
     [SerializeField] private string cameraName = "";
 
     public Texture2D texture;
+    Texture2D screenTex;
+
+    Vector3[] corners = new Vector3[4];
 
     private void Awake()
     {
@@ -33,33 +40,50 @@ public class ScreenShotHandler : MonoBehaviour
     void Start()
     {
         //startCamera();
+        GetImageCorners();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            StartCoroutine(CaptureScreenshot());
-        }
+        //if (Input.GetKeyDown(KeyCode.Space))
+        //{
+        //    StartCoroutine(CaptureScreenshot());
+        //}
     }
 
     public void StartCamera()
     {
         WebCamDevice[] devices = WebCamTexture.devices;
         Debug.Log(devices[0].name);
+
         if (devices.Length > 0)
         {
             webcamTexture = new WebCamTexture(devices[0].name, 3840, 2160, 60);
+            //webcamTexture = new WebCamTexture(devices[0].name, 1080, 1080, 60);
 
+            //camFeed.texture = webcamTexture;
+            NewCamFeed.texture = webcamTexture;
             webcamTexture.Play();
-            camFeed.texture = webcamTexture;
+
+            //StartCoroutine(ResizeAfterInit());
+        }
+    }
+
+    private void GetImageCorners()
+    {
+        gameManager.CamFeedParent.GetWorldCorners(corners);
+
+        for (int i = 0; i < corners.Length; i++)
+        {
+            Debug.Log(corners[i]);
         }
     }
 
     public void InitiateCapture()
     {
-        StartCoroutine(CaptureScreenshot());
+        //StartCoroutine(CaptureScreenshot());
+        StartCoroutine(StartCaptureScreen());
     }
 
     private IEnumerator CaptureScreenshot()
@@ -104,19 +128,54 @@ public class ScreenShotHandler : MonoBehaviour
         gameManager.ScreenContoller(2);
     }
 
+    private IEnumerator StartCaptureScreen()
+    {
+        yield return new WaitForEndOfFrame();
+
+        Rect capturedrect = gameManager.CamFeedParent.GetComponent<RectTransform>().rect;
+
+        screenTex = new Texture2D((int)capturedrect.width, (int)capturedrect.height,
+                                            TextureFormat.RGB24, false);
+
+        var temprect = new Rect(corners[0].x, corners[0].y, capturedrect.width, capturedrect.height);
+        screenTex.ReadPixels(temprect, 0, 0);
+        screenTex.Apply();
+
+        byte[] bytes = screenTex.EncodeToPNG();
+        //texture = new Texture2D(screenTex.width, screenTex.height, TextureFormat.RGB24, false);
+        gameManager.ScreenShotImage.texture = screenTex;
+
+        CameraFeedParent.SetActive(false);
+        camFeed.gameObject.SetActive(false);
+        gameManager.ScreenShotImage.gameObject.SetActive(true);
+
+        //gameManager.ScreenShotImage.transform.rotation = Quaternion.Euler(0, 0, 90);
+
+        gameManager.ScreenContoller(2);
+
+
+    }
+
     public void SaveImage()
     {
         string imagename = "Gillette_" + DateTime.Now.ToString("yyyy-MMM-dd-HH-mm-ss") + ".png";
 
-        byte[] bytes = texture.EncodeToPNG();
+        //byte[] bytes = texture.EncodeToPNG();
+        byte[] bytes = screenTex.EncodeToPNG();
 
         gameManager.LastSavedImageName = imagename;
 
+        //FileIOUtility
+        //        .SaveImage(texture, gameManager.AssetPath,
+        //        imagename,
+        //        FileIOUtility.FileExtension.PNG);
+
         FileIOUtility
-                .SaveImage(texture, gameManager.AssetPath,
+                .SaveImage(screenTex, gameManager.AssetPath,
                 imagename,
                 FileIOUtility.FileExtension.PNG);
 
+        CameraFeedParent.SetActive(false);
         camFeed.gameObject.SetActive(false);
         gameManager.ScreenShotImage.gameObject.SetActive(true);
 
@@ -133,10 +192,9 @@ public class ScreenShotHandler : MonoBehaviour
         gameManager.CollageWall_1.Add(tex);
     }
 
-    
-
-    private void DisplayTheScreenShot()
+    private void CaptureScreenInSquare()
     {
 
     }
+
 }
