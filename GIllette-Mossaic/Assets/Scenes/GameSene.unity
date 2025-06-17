@@ -176,7 +176,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 2800000, guid: 8840d031efdb06b4cba7421a87cb621a, type: 3}
+  m_Texture: {fileID: 2800000, guid: e595beb25af9a73488130e2db88503bf, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -594,7 +594,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 2800000, guid: 8840d031efdb06b4cba7421a87cb621a, type: 3}
+  m_Texture: {fileID: 2800000, guid: f141e40b9bd049e4e849532f82a86dee, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -967,7 +967,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 2800000, guid: f141e40b9bd049e4e849532f82a86dee, type: 3}
+  m_Texture: {fileID: 2800000, guid: 8840d031efdb06b4cba7421a87cb621a, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -1581,7 +1581,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 2800000, guid: 8840d031efdb06b4cba7421a87cb621a, type: 3}
+  m_Texture: {fileID: 2800000, guid: 13a2677b3a610324f8b2de6630fdacf9, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -1653,7 +1653,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 2800000, guid: 8840d031efdb06b4cba7421a87cb621a, type: 3}
+  m_Texture: {fileID: 2800000, guid: 13a2677b3a610324f8b2de6630fdacf9, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -1853,7 +1853,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 2800000, guid: 8840d031efdb06b4cba7421a87cb621a, type: 3}
+  m_Texture: {fileID: 2800000, guid: 13a2677b3a610324f8b2de6630fdacf9, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -2647,7 +2647,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 2800000, guid: 8840d031efdb06b4cba7421a87cb621a, type: 3}
+  m_Texture: {fileID: 2800000, guid: e595beb25af9a73488130e2db88503bf, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -3002,7 +3002,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 2800000, guid: 8840d031efdb06b4cba7421a87cb621a, type: 3}
+  m_Texture: {fileID: 2800000, guid: cc8233343f5d9c84a81757236413951c, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -3673,8 +3673,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Display & Print
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: f4926637b5867da47b11926fe1f5aed3, type: 2}
-  m_sharedMaterial: {fileID: -8945593698165238504, guid: f4926637b5867da47b11926fe1f5aed3, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: baa30820f6f182147ac0c6d38413135f, type: 2}
+  m_sharedMaterial: {fileID: -758075158936620155, guid: baa30820f6f182147ac0c6d38413135f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -3698,8 +3698,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 140
-  m_fontSizeBase: 140
+  m_fontSize: 180
+  m_fontSizeBase: 180
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -5181,7 +5181,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 2800000, guid: f141e40b9bd049e4e849532f82a86dee, type: 3}
+  m_Texture: {fileID: 2800000, guid: 1270ad4afb528fd4aaebb41c0f21f26f, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -5706,8 +5706,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -408.29968, y: -1104.6}
-  m_SizeDelta: {x: 1308.0251, y: 1104.6}
+  m_AnchoredPosition: {x: -398.2057, y: -975.7001}
+  m_SizeDelta: {x: 1223.4824, y: 858.8801}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &929285130
 MonoBehaviour:
@@ -5729,8 +5729,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: To have your image displayed on the Gillette Role Model digital wall, click
-    "Display and print"
+  m_text: If you dont want your picture displayed, your photo magnet will be printed
+    only.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: f4926637b5867da47b11926fe1f5aed3, type: 2}
   m_sharedMaterial: {fileID: -8945593698165238504, guid: f4926637b5867da47b11926fe1f5aed3, type: 2}
@@ -5757,8 +5757,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 120
-  m_fontSizeBase: 120
+  m_fontSize: 110
+  m_fontSizeBase: 110
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -6403,7 +6403,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 2800000, guid: 8840d031efdb06b4cba7421a87cb621a, type: 3}
+  m_Texture: {fileID: 2800000, guid: 6444639e2874886428eaa2ba571028b3, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -8122,7 +8122,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 2800000, guid: 8840d031efdb06b4cba7421a87cb621a, type: 3}
+  m_Texture: {fileID: 2800000, guid: f141e40b9bd049e4e849532f82a86dee, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -8269,7 +8269,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 2800000, guid: 8840d031efdb06b4cba7421a87cb621a, type: 3}
+  m_Texture: {fileID: 2800000, guid: 1270ad4afb528fd4aaebb41c0f21f26f, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -8616,7 +8616,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 2263}
-  m_SizeDelta: {x: 1164, y: 200}
+  m_SizeDelta: {x: 1400, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1249968419
 MonoBehaviour:
@@ -8671,7 +8671,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 16
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -9641,7 +9641,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 2800000, guid: f141e40b9bd049e4e849532f82a86dee, type: 3}
+  m_Texture: {fileID: 2800000, guid: cc8233343f5d9c84a81757236413951c, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -11181,7 +11181,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 2800000, guid: f141e40b9bd049e4e849532f82a86dee, type: 3}
+  m_Texture: {fileID: 2800000, guid: 6444639e2874886428eaa2ba571028b3, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -11253,7 +11253,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 2800000, guid: 8840d031efdb06b4cba7421a87cb621a, type: 3}
+  m_Texture: {fileID: 2800000, guid: cc8233343f5d9c84a81757236413951c, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -11325,7 +11325,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 2800000, guid: 8840d031efdb06b4cba7421a87cb621a, type: 3}
+  m_Texture: {fileID: 2800000, guid: f141e40b9bd049e4e849532f82a86dee, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -11487,7 +11487,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 2800000, guid: 8840d031efdb06b4cba7421a87cb621a, type: 3}
+  m_Texture: {fileID: 2800000, guid: f141e40b9bd049e4e849532f82a86dee, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -11831,8 +11831,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Print Only
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: f4926637b5867da47b11926fe1f5aed3, type: 2}
-  m_sharedMaterial: {fileID: -8945593698165238504, guid: f4926637b5867da47b11926fe1f5aed3, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: baa30820f6f182147ac0c6d38413135f, type: 2}
+  m_sharedMaterial: {fileID: -758075158936620155, guid: baa30820f6f182147ac0c6d38413135f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -11856,8 +11856,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 140
-  m_fontSizeBase: 140
+  m_fontSize: 180
+  m_fontSizeBase: 180
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -12416,7 +12416,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 2800000, guid: 8840d031efdb06b4cba7421a87cb621a, type: 3}
+  m_Texture: {fileID: 2800000, guid: 13a2677b3a610324f8b2de6630fdacf9, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -12756,7 +12756,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 540, y: -1386}
-  m_SizeDelta: {x: 800, y: 200}
+  m_SizeDelta: {x: 1400, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1817096450
 MonoBehaviour:
@@ -12811,8 +12811,8 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
-  m_HorizontalAlignment: 1
+  m_fontStyle: 16
+  m_HorizontalAlignment: 2
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -13575,7 +13575,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 2800000, guid: 8840d031efdb06b4cba7421a87cb621a, type: 3}
+  m_Texture: {fileID: 2800000, guid: 13a2677b3a610324f8b2de6630fdacf9, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -13700,7 +13700,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 460.4961, y: -1104.6}
-  m_SizeDelta: {x: 1325.6091, y: 1104.6}
+  m_SizeDelta: {x: 1325.6091, y: 987.7843}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &1969405270
 MonoBehaviour:
@@ -13722,8 +13722,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: To have your image displayed on the Gillette Role Model digital wall, click
-    "Display and print"
+  m_text: Your picture will be displayed on the #GilletteRoleModel mosaic wall and
+    your photo magnet will be printed
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: f4926637b5867da47b11926fe1f5aed3, type: 2}
   m_sharedMaterial: {fileID: -8945593698165238504, guid: f4926637b5867da47b11926fe1f5aed3, type: 2}
@@ -13750,8 +13750,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 120
-  m_fontSizeBase: 120
+  m_fontSize: 110
+  m_fontSizeBase: 110
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -14190,7 +14190,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 614}
+  m_AnchoredPosition: {x: 0, y: 471}
   m_SizeDelta: {x: 250, y: 250}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2014573909
@@ -14970,7 +14970,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 2800000, guid: 8840d031efdb06b4cba7421a87cb621a, type: 3}
+  m_Texture: {fileID: 2800000, guid: f141e40b9bd049e4e849532f82a86dee, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0
