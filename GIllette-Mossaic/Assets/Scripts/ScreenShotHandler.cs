@@ -34,6 +34,8 @@ public class ScreenShotHandler : MonoBehaviour
 
     public RobustVideoMattingSampleAPI sampleAPI;
 
+    public Camera myMainCamera;
+
     private void Awake()
     {
         gameManager = FindAnyObjectByType<GameManager>();
@@ -136,13 +138,12 @@ public class ScreenShotHandler : MonoBehaviour
         yield return new WaitForEndOfFrame();
 
         Rect capturedrect = gameManager.CamFeedParent.GetComponent<RectTransform>().rect;
-
-        screenTex = new Texture2D((int)capturedrect.width, (int)capturedrect.height,
-                                            TextureFormat.RGB24, false);
-
+        screenTex = CaptureRegionFromCamera();
+        /*screenTex = new Texture2D((int)capturedrect.width, (int)capturedrect.height,TextureFormat.RGB24, false);
+        Debug.Log("Width = " + capturedrect.width + "Height = " + capturedrect.height + "Start Y = " + (3840-900-1400));
         var temprect = new Rect(360, 3840-900-1440, 1440, 1440);
         screenTex.ReadPixels(temprect, 0, 0);
-        screenTex.Apply();
+        screenTex.Apply();*/
 
         byte[] bytes = screenTex.EncodeToPNG();
         //texture = new Texture2D(screenTex.width, screenTex.height, TextureFormat.RGB24, false);
@@ -157,6 +158,35 @@ public class ScreenShotHandler : MonoBehaviour
         gameManager.ScreenContoller(2);
 
 
+    }
+
+    public Texture2D CaptureRegionFromCamera()
+    {
+        // Setup temporary RenderTexture with screen size or desired resolution
+        RenderTexture tempRT = new RenderTexture(Screen.width, Screen.height, 24);
+
+        // Backup original
+        RenderTexture prevRT = RenderTexture.active;
+        RenderTexture prevCamRT = myMainCamera.targetTexture;
+
+        myMainCamera.targetTexture = tempRT;
+        myMainCamera.Render();
+
+        RenderTexture.active = tempRT;
+
+        // Create texture with region size
+        Texture2D result = new Texture2D(1440, 1440, TextureFormat.RGB24, false);
+        var temprect = new Rect(360, 3840 - 900 - 1440, 1440, 1440);
+        result.ReadPixels(temprect, 0, 0);
+        result.Apply();
+
+        // Cleanup
+        myMainCamera.targetTexture = prevCamRT;
+        RenderTexture.active = prevRT;
+        tempRT.Release();
+        UnityEngine.Object.Destroy(tempRT);
+
+        return result;
     }
 
     public void SaveImage(bool isDisplay)
