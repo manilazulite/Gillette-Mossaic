@@ -44,7 +44,7 @@ public class PrintScreenHandler : MonoBehaviour
 
     public void InitPrint()
     {
-        StartCoroutine(ApplyTheCapturedPixelsToCustomResolution());
+        //StartCoroutine(ApplyTheCapturedPixelsToCustomResolution());
     }
 
     int i = 0;

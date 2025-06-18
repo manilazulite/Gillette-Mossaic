@@ -68,7 +68,9 @@ public class GameManager : MonoBehaviour
     public List<RawImage> CollageWall_2_ImageList = new List<RawImage>();
 
     public string AssetPath;
+    public string NonDisplayPath;
     public string PrintAssetPath;
+
 
     public event Action TriggerQrCodeGeneration;
 
@@ -80,16 +82,36 @@ public class GameManager : MonoBehaviour
         CaptureButton.GetComponent<Button>().onClick.AddListener(StartTimer);
         RetakeButton.GetComponent<Button>().onClick.AddListener(InitiateRetakPicture);
         ProceedButton.GetComponent<Button>().onClick.AddListener(()=>ScreenContoller(3));
-        DisplayAndPrintButton.GetComponent<Button>().onClick.AddListener(uploadImageToServerAsync);
+        DisplayAndPrintButton.GetComponent<Button>().onClick.AddListener(() =>
+        {
+            ScreenContoller(6);
+            DisplayTheImagesInTheWall();
+        });
         //DisplayAndPrintButton.GetComponent<Button>().onClick.AddListener(()=>ScreenContoller(4));
         //PrintButton.GetComponent<Button>().onClick.AddListener(()=>ScreenContoller(4));
-        PrintButton.GetComponent<Button>().onClick.AddListener(()=>ScreenContoller(5));
+        PrintButton.GetComponent<Button>().onClick.AddListener(()=>ScreenContoller(7));
 
         HomeButton.GetComponent<Button>().onClick.AddListener(Home);
         BackButton.GetComponent<Button>().onClick.AddListener(Home);   
         
         AssetPath = Application.streamingAssetsPath + "/CapturedImages";
+        NonDisplayPath = Application.streamingAssetsPath + "/NonDisplay";
         PrintAssetPath = Application.streamingAssetsPath + "/printimages";
+
+        if (!Directory.Exists(AssetPath))
+        {
+            Directory.CreateDirectory(AssetPath);
+        }
+
+        if (!Directory.Exists(NonDisplayPath))
+        {
+            Directory.CreateDirectory(NonDisplayPath);
+        }
+
+        if (!Directory.Exists(PrintAssetPath))
+        {
+            Directory.CreateDirectory(PrintAssetPath);
+        }
 
         LoadTheImagesFromStreamingAssets();
 
@@ -178,10 +200,10 @@ public class GameManager : MonoBehaviour
 
                 BackButton.SetActive(false);
                 break;
-            case 3://Display or Print
+            case 3://Display
                 state = ScreenState.displyAndPrint;
                 scrnShotHandler.webcamTexture.Stop();
-                scrnShotHandler.SaveImage();
+                
                 //CollageWall_1.Add(scrnShotHandler.texture);
                 
                 RetakeButton.SetActive(false);
@@ -194,25 +216,18 @@ public class GameManager : MonoBehaviour
             case 4://Thank you
                 state = ScreenState.thankYou;
                 HomeButton.GetComponent<Button>().interactable = false;
-
-                //printScreenHandler.InitPrint();
-                //DisplayTheImagesInTheWall();
-                //uploadImageToServerAsync();
-
-                //PrintImageCommand(LastSavedImageName);
                 StartCoroutine(ThankYou());
 
                 break;
-            case 5://Thank you
+            case 6://Display
+                scrnShotHandler.SaveImage(true);
+                break;
+            case 7://Print
+                scrnShotHandler.SaveImage(false);
                 state = ScreenState.thankYou;
                 HomeButton.GetComponent<Button>().interactable = false;
 
                 printScreenHandler.InitPrint();
-                //DisplayTheImagesInTheWall();
-                uploadImageToServerAsync();
-
-                //PrintImageCommand(LastSavedImageName);
-
                 break;
             default:
 
@@ -515,20 +530,28 @@ public class GameManager : MonoBehaviour
 
     private void PrintPicture()
     {
-        uploadImageToServerAsync();
+        //uploadImageToServerAsync();
     }
 
     private string qrCodeFileName = "";
     private string _capturedImagePath = "";
     
-    private async void uploadImageToServerAsync()
+    public async void uploadImageToServerAsync(bool isDisplay)
     {
         DisplayAndPrintButton.GetComponent<Button>().interactable = false;
         PrintButton.GetComponent<Button>().interactable = false;
         HomeButton.GetComponent<Button>().interactable = false;
 
         var client = new HttpClient();
-        var request = new HttpRequestMessage(HttpMethod.Post, "https://lazulite.online/routes/Sweet_Water/upload-image");
+        string url = "";
+        if (isDisplay)
+        {
+            url = "https://lazulite.online/routes/Sweet_Water/upload-image";
+        } else
+        {
+            url = "https://lazulite.online/routes/Sweet_Water/upload-image";
+        }
+        var request = new HttpRequestMessage(HttpMethod.Post, url);
         var content = new MultipartFormDataContent();
         content.Add(new StreamContent(File.OpenRead(lastSnappedPicturePath)), "image", lastSnappedPicturePath);
         request.Content = content;
@@ -571,8 +594,8 @@ public class GameManager : MonoBehaviour
         var encoder = Barcode.GetEncoder(BarcodeType.QrCode, new QrCodeEncodeOptions
         {
             Margin = 5,
-            Width = 1600,
-            Height = 1600,
+            Width = 900,
+            Height = 900,
             ECLevel = QrCodeErrorCorrectionLevel.M
         });
 

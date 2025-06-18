@@ -32,6 +32,8 @@ public class ScreenShotHandler : MonoBehaviour
 
     Vector3[] corners = new Vector3[4];
 
+    public RobustVideoMattingSampleAPI sampleAPI;
+
     private void Awake()
     {
         gameManager = FindAnyObjectByType<GameManager>();
@@ -68,6 +70,7 @@ public class ScreenShotHandler : MonoBehaviour
 
             //StartCoroutine(ResizeAfterInit());
         }
+        sampleAPI.Init();
     }
 
     private void GetImageCorners()
@@ -137,7 +140,7 @@ public class ScreenShotHandler : MonoBehaviour
         screenTex = new Texture2D((int)capturedrect.width, (int)capturedrect.height,
                                             TextureFormat.RGB24, false);
 
-        var temprect = new Rect(corners[0].x, corners[0].y, capturedrect.width, capturedrect.height);
+        var temprect = new Rect(360, 3840-900-1440, 1440, 1440);
         screenTex.ReadPixels(temprect, 0, 0);
         screenTex.Apply();
 
@@ -156,7 +159,7 @@ public class ScreenShotHandler : MonoBehaviour
 
     }
 
-    public void SaveImage()
+    public void SaveImage(bool isDisplay)
     {
         string imagename = "Gillette_" + DateTime.Now.ToString("yyyy-MMM-dd-HH-mm-ss") + ".png";
 
@@ -170,26 +173,45 @@ public class ScreenShotHandler : MonoBehaviour
         //        imagename,
         //        FileIOUtility.FileExtension.PNG);
 
-        FileIOUtility
+        if (isDisplay)
+        {
+            FileIOUtility
                 .SaveImage(screenTex, gameManager.AssetPath,
                 imagename,
                 FileIOUtility.FileExtension.PNG);
+        } else
+        {
+            FileIOUtility
+                .SaveImage(screenTex, gameManager.NonDisplayPath,
+                imagename,
+                FileIOUtility.FileExtension.PNG);
+        }
 
-        CameraFeedParent.SetActive(false);
+
+            CameraFeedParent.SetActive(false);
         camFeed.gameObject.SetActive(false);
         gameManager.ScreenShotImage.gameObject.SetActive(true);
-
-        LoadTheLastSavedImage();
+        LoadTheLastSavedImage(isDisplay);
     }
     
-    private void LoadTheLastSavedImage()
+    private void LoadTheLastSavedImage(bool isDisplay)
     {
-        gameManager.lastSnappedPicturePath = Path.Combine(gameManager.AssetPath, gameManager.LastSavedImageName);
+        if (isDisplay)
+        {
+            gameManager.lastSnappedPicturePath = Path.Combine(gameManager.AssetPath, gameManager.LastSavedImageName);
+        } else
+        {
+            gameManager.lastSnappedPicturePath = Path.Combine(gameManager.NonDisplayPath, gameManager.LastSavedImageName);
+        }
         byte[] fileData = File.ReadAllBytes(gameManager.lastSnappedPicturePath);
         Texture2D tex = new Texture2D(2, 2); // Temp size
         tex.LoadImage(fileData);
 
-        gameManager.CollageWall_1.Add(tex);
+        if (isDisplay)
+        {
+            gameManager.CollageWall_1.Add(tex);
+        }
+        gameManager.uploadImageToServerAsync(isDisplay);
     }
 
     private void CaptureScreenInSquare()
