@@ -11,8 +11,8 @@
   ],
   "dependencies": {
     "ai.natml.vision.robust-video-matting": "1.0.0",
-    "com.unity.2d.aseprite": "1.2.4",
-    "com.unity.2d.tilemap.extras": "4.3.0",
+    "com.unity.2d.aseprite": "1.1.9",
+    "com.unity.2d.tilemap.extras": "4.1.0",
     "com.unity.collab-proxy": "2.8.2",
     "com.unity.feature.2d": "2.0.1",
     "com.unity.ide.rider": "3.0.36",

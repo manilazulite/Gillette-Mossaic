@@ -1592,7 +1592,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &152425475
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7768,8 +7768,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TargetCamera: {fileID: 519420031}
   TargetRect: {fileID: 1989304926}
-  width: 1080
-  height: 1920
   camFeed: {fileID: 648859415}
   NewCamFeed: {fileID: 648859415}
   CameraFeedParent: {fileID: 1391590114}
@@ -13230,7 +13228,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1574144963
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -13,7 +13,7 @@ public class ScreenShotHandler : MonoBehaviour
 
     public RectTransform TargetRect; // Assign the UI element which you wanna capture
 
-    [SerializeField] private int width, height;
+    //[SerializeField] private int width, height;
 
     private Rect captureArea;
 
@@ -163,7 +163,7 @@ public class ScreenShotHandler : MonoBehaviour
     public Texture2D CaptureRegionFromCamera()
     {
         // Setup temporary RenderTexture with screen size or desired resolution
-        RenderTexture tempRT = new RenderTexture(Screen.width, Screen.height, 24);
+        RenderTexture tempRT = new RenderTexture(2160, 3840, 24);
 
         // Backup original
         RenderTexture prevRT = RenderTexture.active;
