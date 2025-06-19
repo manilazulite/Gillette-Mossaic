@@ -79,10 +79,10 @@ public class ScreenShotHandler : MonoBehaviour
     {
         gameManager.CamFeedParent.GetWorldCorners(corners);
 
-        for (int i = 0; i < corners.Length; i++)
-        {
-            Debug.Log(corners[i]);
-        }
+        //for (int i = 0; i < corners.Length; i++)
+        //{
+        //    Debug.Log(corners[i]);
+        //}
     }
 
     public void InitiateCapture()
@@ -133,31 +133,53 @@ public class ScreenShotHandler : MonoBehaviour
         gameManager.ScreenContoller(2);
     }
 
+    int captureindex = 0;
     private IEnumerator StartCaptureScreen()
     {
-        yield return new WaitForEndOfFrame();
+        //yield return new WaitForEndOfFrame();
+        yield return null;
 
         Rect capturedrect = gameManager.CamFeedParent.GetComponent<RectTransform>().rect;
-        screenTex = CaptureRegionFromCamera();
-        /*screenTex = new Texture2D((int)capturedrect.width, (int)capturedrect.height,TextureFormat.RGB24, false);
-        Debug.Log("Width = " + capturedrect.width + "Height = " + capturedrect.height + "Start Y = " + (3840-900-1400));
-        var temprect = new Rect(360, 3840-900-1440, 1440, 1440);
-        screenTex.ReadPixels(temprect, 0, 0);
-        screenTex.Apply();*/
+        
 
-        byte[] bytes = screenTex.EncodeToPNG();
-        //texture = new Texture2D(screenTex.width, screenTex.height, TextureFormat.RGB24, false);
-        gameManager.ScreenShotImage.texture = screenTex;
+        if (captureindex == 0)
+        {
+            screenTex = CaptureRegionFromCamera();
+            gameManager.ScreenShotImage.texture = screenTex;
+        }
+        else
+        {
+            gameManager.PrintTexture = CaptureRegionFromCamera();
+        }
 
-        CameraFeedParent.SetActive(false);
-        camFeed.gameObject.SetActive(false);
-        gameManager.ScreenShotImage.gameObject.SetActive(true);
-
-        //gameManager.ScreenShotImage.transform.rotation = Quaternion.Euler(0, 0, 90);
-
-        gameManager.ScreenContoller(2);
+            //byte[] bytes = screenTex.EncodeToPNG();  
 
 
+            gameManager.ScreenShotImage.gameObject.SetActive(true);       
+
+        if(captureindex == 0)
+        {
+            //Debug.Log("captureindex 1 : " + captureindex);
+            captureindex++;
+
+            StartCoroutine(gameManager.EnableDisablePrintElements(true));
+            //gameManager.EnableDisablePrintElements(true);
+
+            //yield return new WaitForSeconds(5f);
+            InitiateCapture();
+        }
+        else
+        {
+            //PrintScreenHandler.instance.screenTex = screenTex;
+            //Debug.Log("captureindex 2 : " + captureindex);
+            //gameManager.PrintTexture = screenTex;
+            CameraFeedParent.SetActive(false);
+            camFeed.gameObject.SetActive(false);
+            gameManager.ScreenContoller(2);
+            StartCoroutine(gameManager.EnableDisablePrintElements(false));
+
+            captureindex = 0;
+        }  
     }
 
     public Texture2D CaptureRegionFromCamera()
@@ -192,35 +214,46 @@ public class ScreenShotHandler : MonoBehaviour
     public void SaveImage(bool isDisplay)
     {
         string imagename = "Gillette_" + DateTime.Now.ToString("yyyy-MMM-dd-HH-mm-ss") + ".png";
+        //string imagename = "imageFile"+ ".png";
 
         //byte[] bytes = texture.EncodeToPNG();
-        byte[] bytes = screenTex.EncodeToPNG();
+        //byte[] bytes = screenTex.EncodeToPNG();
 
         gameManager.LastSavedImageName = imagename;
 
-        //FileIOUtility
-        //        .SaveImage(texture, gameManager.AssetPath,
-        //        imagename,
-        //        FileIOUtility.FileExtension.PNG);
-
-        if (isDisplay)
-        {
-            FileIOUtility
+        FileIOUtility
                 .SaveImage(screenTex, gameManager.AssetPath,
                 imagename,
                 FileIOUtility.FileExtension.PNG);
-        } else
-        {
-            FileIOUtility
-                .SaveImage(screenTex, gameManager.NonDisplayPath,
+
+        FileIOUtility
+                .SaveImage(gameManager.PrintTexture, gameManager.PrintAssetPath,
                 imagename,
                 FileIOUtility.FileExtension.PNG);
-        }
 
 
-            CameraFeedParent.SetActive(false);
+        //if (isDisplay)
+        //{
+        //    FileIOUtility
+        //        .SaveImage(screenTex, gameManager.AssetPath,
+        //        imagename,
+        //        FileIOUtility.FileExtension.PNG);
+        //} 
+        //else
+        //{
+        //    FileIOUtility
+        //        .SaveImage(screenTex, gameManager.NonDisplayPath,
+        //        imagename,
+        //        FileIOUtility.FileExtension.PNG);
+        //}
+
+
+        CameraFeedParent.SetActive(false);
         camFeed.gameObject.SetActive(false);
-        gameManager.ScreenShotImage.gameObject.SetActive(true);
+        //gameManager.ScreenShotImage.gameObject.SetActive(true);
+
+        //PrintScreenHandler.instance.InitPrint();
+
         LoadTheLastSavedImage(isDisplay);
     }
     
@@ -228,25 +261,26 @@ public class ScreenShotHandler : MonoBehaviour
     {
         if (isDisplay)
         {
-            gameManager.lastSnappedPicturePath = Path.Combine(gameManager.AssetPath, gameManager.LastSavedImageName);
-        } else
+            gameManager.lastSnappedPicturePath = Path.Combine(gameManager.AssetPath, gameManager.LastSavedImageName);            
+        } 
+        else
         {
-            gameManager.lastSnappedPicturePath = Path.Combine(gameManager.NonDisplayPath, gameManager.LastSavedImageName);
+            gameManager.lastSnappedPicturePath = Path.Combine(gameManager.PrintAssetPath, gameManager.LastSavedImageName);
         }
-        byte[] fileData = File.ReadAllBytes(gameManager.lastSnappedPicturePath);
-        Texture2D tex = new Texture2D(2, 2); // Temp size
-        tex.LoadImage(fileData);
+
+        
 
         if (isDisplay)
         {
+            byte[] fileData = File.ReadAllBytes(gameManager.lastSnappedPicturePath);
+            Texture2D tex = new Texture2D(2, 2); // Temp size
+            tex.LoadImage(fileData);
+
             gameManager.CollageWall_1.Add(tex);
         }
+
         gameManager.uploadImageToServerAsync(isDisplay);
     }
 
-    private void CaptureScreenInSquare()
-    {
-
-    }
 
 }

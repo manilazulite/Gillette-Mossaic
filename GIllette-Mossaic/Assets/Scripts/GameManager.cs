@@ -48,6 +48,9 @@ public class GameManager : MonoBehaviour
     public GameObject MainMenu;
     public GameObject FrameBar;
     public GameObject Frame;
+    public GameObject LoadingScreenObject;
+    public GameObject PrintLogoObject;
+    public GameObject PrintHashTag;
 
     [SerializeField] private TMP_InputField printerNameField;
 
@@ -70,7 +73,9 @@ public class GameManager : MonoBehaviour
     public string AssetPath;
     public string NonDisplayPath;
     public string PrintAssetPath;
+    public string LastPrintSavedImageName;
 
+    public Texture2D PrintTexture;
 
     public event Action TriggerQrCodeGeneration;
 
@@ -84,11 +89,11 @@ public class GameManager : MonoBehaviour
         ProceedButton.GetComponent<Button>().onClick.AddListener(()=>ScreenContoller(3));
         DisplayAndPrintButton.GetComponent<Button>().onClick.AddListener(() =>
         {
+            EnableDisableLoadingScreen(true);
             ScreenContoller(6);
             DisplayTheImagesInTheWall();
         });
-        //DisplayAndPrintButton.GetComponent<Button>().onClick.AddListener(()=>ScreenContoller(4));
-        //PrintButton.GetComponent<Button>().onClick.AddListener(()=>ScreenContoller(4));
+        
         PrintButton.GetComponent<Button>().onClick.AddListener(()=>ScreenContoller(7));
 
         HomeButton.GetComponent<Button>().onClick.AddListener(Home);
@@ -117,14 +122,7 @@ public class GameManager : MonoBehaviour
 
         DisplayTheImagesInTheWall();
 
-        //for (int i = 1; i < Display.displays.Length; i++)
-        //{
-        //    // Option A – let Unity use the monitor's native resolution
-        //    Display.displays[i].Activate();
-
-        //    // Option B – pick a resolution/refresh if you need to
-        //    // Display.displays[i].Activate(1920, 1080, 60);
-        //}
+        
 
         Display[] displays = Display.displays;
         foreach (Display display in displays)
@@ -137,8 +135,6 @@ public class GameManager : MonoBehaviour
 
     private void StartTimer()
     {
-        //StartCoroutine(PrintScreenHandler.instance.ApplyTheCapturedPixelsToCustomResolution());
-        
         StartCoroutine(StartCountDown());
     }
 
@@ -223,11 +219,17 @@ public class GameManager : MonoBehaviour
                 scrnShotHandler.SaveImage(true);
                 break;
             case 7://Print
+                EnableDisableLoadingScreen(true);
                 scrnShotHandler.SaveImage(false);
                 state = ScreenState.thankYou;
                 HomeButton.GetComponent<Button>().interactable = false;
 
-                printScreenHandler.InitPrint();
+                //PrintScreenHandler.instance.PortrayTheCapturedImageInA4();
+
+                //printScreenHandler.InitPrint();
+                break;
+            case 8:
+                scrnShotHandler.InitiateCapture();
                 break;
             default:
 
@@ -236,15 +238,22 @@ public class GameManager : MonoBehaviour
     }
 
     private IEnumerator ThankYou()
-    {
+    {        
+
         UnityEngine.Debug.Log("calling thank u");
         yield return new WaitForSeconds(3f);
+        EnableDisableLoadingScreen(false);
         ScreenShotImage.gameObject.SetActive(false);
         Panel_3.SetActive(false);
         Frame.SetActive(false);
         FrameBar.SetActive(false);
         Panel_4.SetActive(true);
         HomeButton.GetComponent<Button>().interactable = true;
+
+        if (PrintScreenHandler.instance.screenTex != null)
+        {
+            Destroy(PrintScreenHandler.instance.screenTex);
+        }
     }
 
     public void InitiateRetakPicture()
@@ -284,51 +293,6 @@ public class GameManager : MonoBehaviour
             tempval++;
         }
     }
-
-    //private IEnumerator DisplayAndPrint_Wall_1()
-    //{
-    //    yield return new WaitForSeconds(0.5f);
-
-    //    int tempval = 0;
-    //    int tempvounterlessthanten = 0;
-
-    //    if (CollageWall_1.Count > 10)
-    //    {
-    //        for (int i = CollageWall_1.Count; i > CollageWall_1.Count - 10; i--)
-    //        {
-    //            CollageWall_1_ImageList[tempval].GetComponent<RawImage>().texture = CollageWall_1[i - 1];
-    //            tempval++;
-    //        }
-    //    }
-
-    //    if(CollageWall_1.Count < 10)
-    //    {
-    //        for(int i = CollageWall_1.Count; i > 0; i--)
-    //        {
-    //            CollageWall_1_ImageList[tempvounterlessthanten].GetComponent<RawImage>().texture = CollageWall_1[i - 1];
-    //            tempvounterlessthanten++;
-    //        }
-    //    }
-
-    //    if (CollageWall_1.Count < CollageWall_2_ImageList.Count)
-    //    {
-    //        for (int i = 0; i < CollageWall_1.Count; i++)
-    //        {
-    //            CollageWall_2_ImageList[i].texture = CollageWall_1[i];
-    //        }
-    //    }
-    //    else
-    //    {
-
-    //        //Displaying the second wall Images
-    //        for (int i = 0; i < CollageWall_2_ImageList.Count; i++)
-    //        {
-    //            CollageWall_2_ImageList[i].texture = CollageWall_1[i];
-    //        }
-    //    }
-
-    //    ScreenContoller(4);
-    //}
 
     public void Home()
     {
@@ -405,49 +369,7 @@ public class GameManager : MonoBehaviour
             }
         }
     }
-
-    //private void LoadImagesFromAssetFolder()
-    //{
-    //    if (CollageWall_1.Count == 0)
-    //    {
-    //        string[] files = Directory.GetFiles(AssetPath, "*.png");
-
-    //        foreach (string filePath in files)
-    //        {
-    //            byte[] pngData = File.ReadAllBytes(filePath);
-
-    //            Texture2D tex = new Texture2D(2, 2); // placeholder size
-    //            if (tex.LoadImage(pngData)) // Loads and resizes texture
-    //            {
-    //                //// Convert to Sprite
-    //                //Sprite sprite = Sprite.Create(
-    //                //    tex,
-    //                //    new Rect(0, 0, tex.width, tex.height),
-    //                //    new Vector2(0.5f, 0.5f)
-    //                //);
-
-    //                CollageWall_1.Add(tex);
-    //            }
-    //            else
-    //            {
-    //                Debug.LogWarning("Could not load image: " + filePath);
-    //            }
-    //        }
-
-    //        for (int i = CollageWall_1.Count; i < CollageWall_1.Count - 10; i--)
-    //        {
-    //            CollageWall_1_ImageList[i].GetComponent<RawImage>().texture = CollageWall_1[i];
-    //        }
-
-    //    }
-    //    else
-    //    {
-    //        for(int i = CollageWall_1.Count; i < CollageWall_1.Count - 10; i--)
-    //        {
-    //            CollageWall_1_ImageList[i].GetComponent<RawImage>().texture = CollageWall_1[i];
-    //        }
-    //    }
-    //}
+    
 
     #region Print the Captured Image
     public void PrintImageCommand(string fileName)
@@ -526,12 +448,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    #region QR code Generation
-
-    private void PrintPicture()
-    {
-        //uploadImageToServerAsync();
-    }
+    #region QR code Generation   
 
     private string qrCodeFileName = "";
     private string _capturedImagePath = "";
@@ -542,23 +459,31 @@ public class GameManager : MonoBehaviour
         PrintButton.GetComponent<Button>().interactable = false;
         HomeButton.GetComponent<Button>().interactable = false;
 
+        UnityEngine.Debug.Log("LastsavedImagename : " + LastSavedImageName);
+
         var client = new HttpClient();
         string url = "";
-        if (isDisplay)
-        {
-            url = "https://lazulite.online/routes/Sweet_Water/upload-image";
-        } else
-        {
-            url = "https://lazulite.online/routes/Sweet_Water/upload-image";
-        }
+
+        url = "https://lazulite.online/routes/gillette-mosaic-upload-image";
+
+        //if (isDisplay)
+        //{
+        //    url = "https://lazulite.online/routes/gillette-mosaic/upload-image";
+        //} else
+        //{
+        //    url = "https://lazulite.online/routes/Sweet_Water/upload-image";
+        //}
         var request = new HttpRequestMessage(HttpMethod.Post, url);
         var content = new MultipartFormDataContent();
-        content.Add(new StreamContent(File.OpenRead(lastSnappedPicturePath)), "image", lastSnappedPicturePath);
+        content.Add(new StreamContent(File.OpenRead(lastSnappedPicturePath)), "imageFile", LastSavedImageName);
+        //content.Add(new StreamContent(File.OpenRead(lastSnappedPicturePath)), LastSavedImageName, lastSnappedPicturePath);
         request.Content = content;
         var response = await client.SendAsync(request).ConfigureAwait(false);
         response.EnsureSuccessStatusCode();
         var contents = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
         qrCodeFileName = contents;
+
+        UnityEngine.Debug.Log("response : " + response.ToString());
 
         UnityMainThreadDispatcher.Instance().Enqueue(() => {
             //PrintScreenHandler.instance.InitPrint();
@@ -585,7 +510,10 @@ public class GameManager : MonoBehaviour
     IEnumerator GenQRCode()
     {
         yield return new WaitForEndOfFrame();
-        this.generateQRCode("https://lazulite.online/routes/Sweet_Water/DownloadImage?filename=" + qrCodeFileName);
+        this.generateQRCode("https://lazulite.online/routes/gillette-mosaic-download-image/" + qrCodeFileName);
+
+        UnityEngine.Debug.Log("QR link : " + qrCodeFileName);
+
         //this.generateQRCode("http://157.175.150.146:3000/routes/Sweet_Water/DownloadImage?filename=" + qrCodeFileName);
     }
 
@@ -624,6 +552,19 @@ public class GameManager : MonoBehaviour
     }
 
     #endregion
+
+    public IEnumerator EnableDisablePrintElements(bool status)
+    {
+        UnityEngine.Debug.Log("enabling disabling elements : " + status);
+        PrintLogoObject.SetActive(status);
+        PrintHashTag.SetActive(status);
+        yield return null;
+    }
+
+    private void EnableDisableLoadingScreen(bool status)
+    {
+        LoadingScreenObject.SetActive(status);
+    }
 
     private void ResetGame()
     {
