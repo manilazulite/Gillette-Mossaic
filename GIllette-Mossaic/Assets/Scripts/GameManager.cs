@@ -3,13 +3,12 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections;
-using Unity.VisualScripting;
-using UnityEngine.Rendering;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System;
 using System.Net.Http;
 using CielaSpike.Unity.Barcode;
+using Debug = UnityEngine.Debug;
 
 public class GameManager : MonoBehaviour
 {
@@ -125,9 +124,12 @@ public class GameManager : MonoBehaviour
         
 
         Display[] displays = Display.displays;
-        foreach (Display display in displays)
+        for (int i = 0; i < 4; i++)
         {
-            display.Activate();
+            if(Application.platform != RuntimePlatform.WindowsEditor)
+            {
+                displays[i].Activate();
+            }
         }
 
     }
@@ -475,7 +477,8 @@ public class GameManager : MonoBehaviour
         //}
         var request = new HttpRequestMessage(HttpMethod.Post, url);
         var content = new MultipartFormDataContent();
-        content.Add(new StreamContent(File.OpenRead(lastSnappedPicturePath)), "imageFile", LastSavedImageName);
+        Debug.Log("Uploading Image Path = " + LastSavedPrintImageName);
+        content.Add(new StreamContent(File.OpenRead(Path.Combine(PrintAssetPath, LastSavedImageName))), "imageFile", LastSavedImageName);
         //content.Add(new StreamContent(File.OpenRead(lastSnappedPicturePath)), LastSavedImageName, lastSnappedPicturePath);
         request.Content = content;
         var response = await client.SendAsync(request).ConfigureAwait(false);
